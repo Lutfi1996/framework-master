@@ -1,0 +1,26 @@
+# Composer dependencies
+/vendor
+
+# CI4 environment
+.env
+.env.*
+
+# CI4 writable folder (log, cache, session, dll)
+writable/cache/
+writable/logs/
+writable/session/
+writable/debugbar/
+
+# OS / Editor / Tool Files
+*.log
+*.lock
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# PHPUnit result
+phpunit.xml
+
+# Node (jika pakai frontend tools)
+node_modules/
