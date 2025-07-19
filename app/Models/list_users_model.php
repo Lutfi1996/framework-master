@@ -9,7 +9,7 @@ class list_users_model extends Model
     protected $table = 'z_mutasi_user';
     protected $primaryKey = 'id'; // ganti sesuai kolom PK
     // protected $allowedFields = ['id', 'type_user', 'nip', 'password', 'nama', 'kodeunker_utama', 'email', 'status', 'input_by', 'input_date']; // sesuaikan
-    protected $allowedFields = ['nip', 'nama', 'email', 'password', 'status', 'status_login', 'kodeunker_utama', 'type_user', 'input_by', 'input_date']; // sesuaikan
+    protected $allowedFields = ['nip', 'nama', 'email', 'password', 'status', 'status_login', 'kodeunker_utama', 'type_user', 'input_by', 'input_date', 'last_login']; // sesuaikan
     // Callbacks
     // protected $allowCallbacks = true;
     // protected $beforeInsert   = ['hashPassword'];
@@ -55,7 +55,9 @@ class list_users_model extends Model
 
     public function updateStatusLogin($id, $status)
     {
-        return $this->update($id, ['status_login' => $status]);
+        date_default_timezone_set('Asia/Jakarta'); // Set timezone to Jakarta
+        // Update status login dan last login
+        return $this->update($id, ['status_login' => $status, 'last_login' => date('Y-m-d H:i:s')]);
     }
 
     // Tambahkan method untuk create user

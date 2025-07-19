@@ -9,7 +9,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->get('/form_pengajuan', 'Home::form_pengajuan', ['filter' => 'auth']);
 $routes->get('/list_pengajuan', 'list_pengajuan::index', ['filter' => 'auth']);
-$routes->get('/setting_users', 'list_users::index', ['filter' => 'auth']);
+$routes->get('/setting_users', 'list_users::index', ['filter' => 'role:1']);//misal menu ini hanya bisa diakses oleh admin
 $routes->get('/create_user', 'list_users::create', ['filter' => 'auth']);
 $routes->post('/create_user', 'list_users::store', ['filter' => 'auth']);
 
