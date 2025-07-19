@@ -41,7 +41,7 @@
           <div>
             <div class="card card-primary card-outline mb-4"> <!--begin::Header-->
               <div class="card-header">
-                <div class="card-title">Quick Example</div>
+                <div class="card-title">Form Pengajuan Mutasi</div>
               </div> <!--end::Header--> <!--begin::Form-->
               <form> <!--begin::Body-->
                 <div class="card-body">
@@ -59,6 +59,9 @@
                     <div class="col-md-6"> <label for="validationCustom02" class="form-label">Unit Kerja</label>
                       <input type="text" class="form-control" id="validationCustom02" value="Otto" required>
                     </div> <!--end::Col--> <!--begin::Col-->
+                  </div>
+                  <div class="mb-3"> <label for="jenis_mutasi" class="form-label">Jenis Mutasi</label>
+                    <input type="nama" class="form-control" id="nama" aria-describedby="nama">
                   </div>
                   <div class="mb-3"> <label for="sk" class="form-label">SK Penepatan Terakhir</label>
                     <div class="input-group mb-3">

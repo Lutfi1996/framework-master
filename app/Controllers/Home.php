@@ -16,7 +16,12 @@ class Home extends BaseController
     {
         return view(name: 'list_pengajuan');
     }
+    public function setting_users(): string
+    {
+        return view(name: 'setting_users'); // file setting_users.php di views
+    }
 }
+
 
 ?>
 

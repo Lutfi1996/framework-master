@@ -9,7 +9,7 @@ class List_pengajuan extends BaseController
     public function index()
     {
         $model = new list_pengajuan_model();
-        $data['mutasi'] = $model->getJoin(); // ambil semua data
+        $data['mutasi'] = $model->getJoin(); // ambil semua data dgn join
         return view('list_pengajuan', $data);
     }
 

@@ -42,6 +42,12 @@
               </a>
             </li>
 
+            <li class="nav-item"> <a href="<?= base_url('setting_users') ?>" class="nav-link"> 
+                <i class="nav-icon bi bi-palette"></i>
+                <p>Setting User</p>
+              </a>
+            </li>
+
             <li class="nav-item"> <a href="./generate/theme.html" class="nav-link"> <i
                   class="nav-icon bi bi-palette"></i>
                 <p>Theme Generate</p>
