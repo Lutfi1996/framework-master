@@ -30,11 +30,17 @@
               </ul>
             </li>
             
-            <li class="nav-item"> <a href="<?= base_url('form_pengajuan') ?>" class="nav-link"> 
-                <i class="nav-icon bi bi-palette"></i>
-                <p>Form Pengajuan Mutasi</p>
-              </a>
-            </li>
+            <?php 
+            $userType = session()->get('type_user');
+            // Atau cara alternatif:
+            $allowedPengajuanMutasi = [3]; // Role yang diizinkan untuk akses pengajuan mutasi'];
+            if(in_array($userType, $allowedPengajuanMutasi)): ?>
+              <li class="nav-item"> <a href="<?= base_url('form_pengajuan') ?>" class="nav-link"> 
+                  <i class="nav-icon bi bi-palette"></i>
+                  <p>Form Pengajuan Mutasi</p>
+                </a>
+              </li>
+            <?php endif; ?>
             
             <li class="nav-item"> <a href="<?= base_url('list_pengajuan') ?>" class="nav-link"> 
                 <i class="nav-icon bi bi-palette"></i>
@@ -42,11 +48,16 @@
               </a>
             </li>
 
-            <li class="nav-item"> <a href="<?= base_url('setting_users') ?>" class="nav-link"> 
-                <i class="nav-icon bi bi-palette"></i>
-                <p>Setting User</p>
-              </a>
-            </li>
+            <?php 
+              // Atau cara alternatif:
+              $allowedPengajuanMutasi = [1,2]; // Role yang diizinkan untuk akses pengajuan mutasi'];
+              if(in_array($userType, $allowedPengajuanMutasi)): ?>
+              <li class="nav-item"> <a href="<?= base_url('setting_users') ?>" class="nav-link"> 
+                  <i class="nav-icon bi bi-palette"></i>
+                  <p>Setting User</p>
+                </a>
+              </li>
+            <?php endif; ?>
 
             <li class="nav-item"> <a href="./generate/theme.html" class="nav-link"> <i
                   class="nav-icon bi bi-palette"></i>

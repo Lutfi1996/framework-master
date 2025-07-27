@@ -40,7 +40,7 @@
                       </div>
                   <?php endif; ?>
                   <form action="<?= base_url('create_user') ?>" method="post">
-                    
+                    <?= csrf_field() ?>
                     <div class="mb-2"> 
                       <label for="nip" class="form-label">NIP</label>
                       <input name='nip' type="text" class="form-control" id="nip" aria-describedby="nama" required>

@@ -7,11 +7,21 @@ use CodeIgniter\Router\RouteCollection;
  */
 // $routes->get('/dbtest', 'DBTest::index');
 $routes->get('/', 'Home::index');
-$routes->get('/form_pengajuan', 'Home::form_pengajuan', ['filter' => 'auth']);
+// $routes->get('/form_pengajuan', 'list_pengajuan::create', ['filter' => 'role:3']);
+// $routes->get('/form_pengajuan', 'list_pengajuan::create', ['filter' => 'role:3']);
 $routes->get('/list_pengajuan', 'list_pengajuan::index', ['filter' => 'auth']);
-$routes->get('/setting_users', 'list_users::index', ['filter' => 'role:1']);//misal menu ini hanya bisa diakses oleh admin
-$routes->get('/create_user', 'list_users::create', ['filter' => 'auth']);
-$routes->post('/create_user', 'list_users::store', ['filter' => 'auth']);
+
+$routes->group('form_pengajuan', function($routes) {
+    $routes->get('/', 'list_pengajuan::create',  ['filter' => 'role:3']);
+    $routes->post('store', 'list_pengajuan::store', ['filter' => 'role:3']);
+    // Tambahkan route lain untuk edit, update, delete sesuai kebutuhan
+    $routes->get('suggestion', 'list_pengajuan::suggestion');
+});
+
+
+$routes->get('/setting_users', 'list_users::index', ['filter' => 'role:1,2']);//misal menu ini bisa diakses oleh admin dan admin bkpsdm
+$routes->get('/create_user', 'list_users::create', ['filter' => 'role:1,2']);//misal menu ini bisa diakses oleh admin dan admin bkpsdm
+$routes->post('/create_user', 'list_users::store', ['filter' => 'role:1,2']);//misal menu ini bisa diakses oleh admin dan admin bkpsdm
 
 
 $routes->get('/login', 'Auth::login');
