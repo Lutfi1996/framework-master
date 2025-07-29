@@ -16,9 +16,10 @@ class list_pengajuan_model extends Model
         'nip', 
         'namalengkap', 
         'kodeunker', 
-        'pnskodegol', 
-        'jabatan_lama', 
-        'jabatan_baru', 
+        'golakhirkodegol', 
+        'jabakhirnama',
+        // 'jabatan_lama', 
+        // 'jabatan_baru', 
         'alasan',
         'input_by_id',
         'input_date',
@@ -76,15 +77,37 @@ class list_pengajuan_model extends Model
         return $data;
     }
 
-    public function searchPegawai($keyword)
+    public function searchPegawai($keyword, $kodeunker_utama)
     {
+        // Menggunakan kodeunker_utama untuk filter
         return $this->db->table('Peg_Pegawai')
-            ->select('nip, namalengkap')
-            ->like('nip', $keyword)
-            ->orLike('namalengkap', $keyword)
-            ->limit(5)
+            ->select('nip, namalengkap, kodeunker, kodeaktif, kodestatusASN')
+            // ->where('left(kodeunker_utama,2)', $kodeunker_utama) // Filter berdasarkan kodeunker_utama
+            ->like('kodeunker', $kodeunker_utama, 'after') // cocokan prefix 2 digit
+            ->where('kodeaktif',1) // hanya yang aktif
+            ->where('kodestatusASN', 1) // hanya yang ASN
+            ->groupStart()
+                ->like('nip', $keyword)
+                ->orLike('namalengkap', $keyword)
+            ->groupEnd()
+            ->limit(10) // Batasi hasil pencarian
             ->get()
             ->getResultArray();
+    }
+
+    public function getPegawai($id)
+    {
+        // return $this->where(['nip' => $id])->first();
+        return $this->db->table('Peg_Pegawai')
+            ->join('Peg_unker', 'Peg_unker.kodeunker = Peg_Pegawai.kodeunker')
+            ->join('Peg_Golongan', 'Peg_Golongan.kodegol = Peg_Pegawai.golakhirkodegol')
+            ->select('Peg_Pegawai.nip, Peg_Pegawai.namalengkap, Peg_Pegawai.kodeunker, Peg_Pegawai.golakhirkodegol,
+             Peg_Pegawai.kodeaktif, Peg_Pegawai.kodestatusASN, Peg_Pegawai.jabakhirnama,
+             Peg_unker.unker1, Peg_unker.unker2, Peg_unker.unker3,
+             Peg_Golongan.pangkatgol')
+            ->where('Peg_Pegawai.nip', $id)
+            ->get()
+            ->getRow();
     }
 }
 

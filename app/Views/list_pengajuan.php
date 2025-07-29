@@ -16,8 +16,8 @@
                                     <th>NIP</th>
                                     <th>Nama Legkap</th>
                                     <th>Organisasi</th>
-                                    <th>Jabatan/Golongan Lama</th>
-                                    <th>Jabatan/Golongan Baru</th>
+                                    <!-- <th>Jabatan/Golongan Lama</th>
+                                    <th>Jabatan/Golongan Baru</th> -->
                                     <th>Label</th>
                                 </tr>
                             </thead>
@@ -27,8 +27,6 @@
                                     <td> <?= esc($row['nip']) ?> </td>
                                     <td> <?= esc($row['namalengkap']) ?> </td>
                                     <td> <?= esc($row['unker1']) ?> </td>
-                                    <td> <?= esc($row['jabatan_lama']) ?> </td>
-                                    <td> <?= esc($row['jabatan_baru']) ?> </td>
                                     <td><span class="badge text-bg-danger">55%</span></td>
                                 </tr>
                                 <?php endforeach; ?>

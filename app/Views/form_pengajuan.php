@@ -22,21 +22,7 @@
             </div> <!--end::Row-->
           </div> <!--end::Container-->
         </div> <!--end::App Content Header--> <!--begin::App Content-->
-        <div class="card card-primary card-outline mb-4"> <!--begin::Header-->
-          <div class="card-header">
-            <div class="card-title">Pencarian</div>
-          </div> <!--end::Header--> <!--begin::Form-->
-          <form> <!--begin::Body-->
-            <div class="card-body">
-              <div class="input-group mb-3">
-                <form class="d-flex" role="search">
-                  <input class="form-control me-2" type="text" id="search_pegawai" name="search_pegawai" placeholder="Ketik Nama / NIP " aria-label="Search">
-                  <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-              </div>
-            </div>
-          </form>
-        </div> <!--end::Body-->
+        
         <div> <!--begin::Header-->
           <div>
             <div class="card card-primary card-outline mb-4"> <!--begin::Header-->
@@ -52,38 +38,45 @@
                       </ul>
                   </div>
               <?php endif ?>
-              <form action="<?= base_url('/form_pengajuan/store') ?>" method="post">
+              <form action="<?= base_url('/form_pengajuan/store') ?>" method="post" enctype="multipart/form-data">
                 <?= csrf_field() ?>
                 <div class="card-body">
 
                   <div class="row g-3 mb-3">  
                     <div class="col-md-8"> <label for="nama" class="form-label">Nama Pegawai</label>
-                      <input type="nama" class="form-control" name="namalengkap" id="nama" aria-describedby="nama">
+                      <input type="nama" class="form-control" name="namalengkap" readonly
+                       id="nama" aria-describedby="nama" value="<?= old('namalengkap', $pegawai->namalengkap ?? '') ?>">
                     </div>
                     <div class="col-md-4"> <label for="nip" class="form-label">NIP</label>
-                      <input type="nip" class="form-control" name="nip"  id="nip" aria-describedby="nama">
+                      <input type="nip" class="form-control" name="nip"  id="nip" aria-describedby="nama" readonly
+                      value="<?= old('nip', $pegawai->nip ?? '') ?>">
                     </div>
                   </div>
                   
                   <div class="col-md-12 mb-3"> <label for="unker1" class="form-label">Dinas</label>
-                      <input type="nip" class="form-control" name="unker1"  id="unker1" aria-describedby="unker1">
+                      <input type="nip" class="form-control" name="unker1"  id="unker1" aria-describedby="unker1"
+                      value="<?= old('unker1', $pegawai->unker1 ?? '') ?>" readonly>
                   </div>
 
                   <div class="row g-3 mb-3">  
                     <div class="col-md-6"> <label for="unker2" class="form-label">Bidang</label>
-                      <input type="nama" class="form-control" name="unker2" id="unker2" aria-describedby="unker2">
+                      <input type="nama" class="form-control" name="unker2" id="unker2" aria-describedby="unker2"
+                      value="<?= old('unker2', $pegawai->unker2 ?? '') ?>" readonly>
                     </div>
                     <div class="col-md-6"> <label for="unker3" class="form-label">Sub Bidang</label>
-                      <input type="nip" class="form-control" name="unker3"  id="unker3" aria-describedby="unker3">
+                      <input type="nip" class="form-control" name="unker3"  id="unker3" aria-describedby="unker3"
+                      value="<?= old('unker3', $pegawai->unker3 ?? '') ?>" readonly>
                     </div>
                   </div>
 
                   <div class="row g-3 mb-3">  
                     <div class="col-md-6"> <label for="jabatan" class="form-label">Jabatan</label>
-                      <input type="nama" class="form-control" name="jabatan" id="jabatan" aria-describedby="jabatan">
+                      <input type="nama" class="form-control" name="jabatan" id="jabatan" aria-describedby="jabatan"
+                      value="<?= old('jabatan', $pegawai->jabakhirnama ?? '') ?>" readonly>
                     </div>
                     <div class="col-md-6"> <label for="golongan" class="form-label">Golongan</label>
-                      <input type="nip" class="form-control" name="golongan"  id="golongan" aria-describedby="golongan">
+                      <input type="nip" class="form-control" name="golongan"  id="golongan" aria-describedby="golongan"
+                      value="<?= old('golongan', $pegawai->pangkatgol ?? '') ?>" readonly>
                     </div>
                   </div>
 
@@ -96,21 +89,21 @@
                     </div> end::Col--> <!--begin::Col
                   </div> -->
 
-                  <div class="row g-3 mb-3">
+                  <!-- <div class="row g-3 mb-3">
                     <div class="col-md-6"> <label for="validationCustom02" class="form-label">Jabatan Lama</label>
                       <input type="text" class="form-control" id="jabatan_lama" name="jabatan_lama" value="Otto" required>
-                    </div> <!--end::Col--> <!--begin::Col-->
-                    <div class="col-md-6"> <label for="validationCustom02" class="form-label">Jabatan Baru</label>
+                    </div> end::Col begin::Col -->
+                    <!-- <div class="col-md-6"> <label for="validationCustom02" class="form-label">Jabatan Baru</label>
                         <input type="text" class="form-control" id="jabatan_baru" name="jabatan_baru" value="Otto" required>
-                    </div> <!--end::Col--> <!--begin::Col-->
-                  </div>
+                    </div> end::Col begin::Col -->
+                  <!-- </div> -->
 
                   <!-- <div class="mb-3"> <label for="jenis_mutasi" class="form-label">Jenis Mutasi</label>
                     <input type="nama" class="form-control" id="nama" aria-describedby="nama">
                   </div> -->
                   <div class="mb-3"> <label for="sk" class="form-label">SK Penempatan Terakhir</label>
                     <div class="input-group mb-3">
-                      <input type="file" class="form-control" id="inputSK">
+                      <input type="file" class="form-control" id="inputSK" require>
                       <label class="input-group-text" for="inputSK">
                         Upload
                       </label>

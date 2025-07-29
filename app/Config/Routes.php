@@ -6,7 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 // $routes->get('/dbtest', 'DBTest::index');
-$routes->get('/', 'Home::index');
+$routes->get('/', 'Home::index', ['filter' => 'auth']);
 // $routes->get('/form_pengajuan', 'list_pengajuan::create', ['filter' => 'role:3']);
 // $routes->get('/form_pengajuan', 'list_pengajuan::create', ['filter' => 'role:3']);
 $routes->get('/list_pengajuan', 'list_pengajuan::index', ['filter' => 'auth']);
@@ -15,7 +15,8 @@ $routes->group('form_pengajuan', function($routes) {
     $routes->get('/', 'list_pengajuan::create',  ['filter' => 'role:3']);
     $routes->post('store', 'list_pengajuan::store', ['filter' => 'role:3']);
     // Tambahkan route lain untuk edit, update, delete sesuai kebutuhan
-    $routes->get('suggestion', 'list_pengajuan::suggestion');
+    $routes->get('suggestion', 'list_pengajuan::suggestion', ['filter' => 'role:3']);
+    $routes->get('getdatapegawai', 'list_pengajuan::getdatapegawai', ['filter' => 'role:3']);
 });
 
 
