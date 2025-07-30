@@ -103,7 +103,7 @@
                   </div> -->
                   <div class="mb-3"> <label for="sk" class="form-label">SK Penempatan Terakhir</label>
                     <div class="input-group mb-3">
-                      <input type="file" class="form-control" id="inputSK" require>
+                      <input type="file" class="form-control" id="inputSK" name="inputSK" accept=".pdf" required >
                       <label class="input-group-text" for="inputSK">
                         Upload
                       </label>
@@ -111,15 +111,15 @@
                   </div>
                   <div class="mb-3"> <label for="sk-kp" class="form-label">SK Kenaikan Pangkat Terakhir</label>
                     <div class="input-group mb-3">
-                      <input type="file" class="form-control" id="inputSK-KP">
-                      <label class="input-group-text" for="inputSK-KP">
+                      <input type="file" class="form-control" id="inputSKKP" name="inputSKKP" accept=".pdf" required>
+                      <label class="input-group-text" for="inputSKKP">
                         Upload
                       </label>
                     </div>
                   </div>
                   <div class="mb-3"> <label for="skp" class="form-label">SKP tahun pertama</label>
                     <div class="input-group mb-3">
-                      <input type="file" class="form-control" id="inputSKP1">
+                      <input type="file" class="form-control" id="inputSKP1" name="inputSKP1" accept=".pdf" required>
                       <label class="input-group-text" for="inputSKP1">
                         Upload
                       </label>
@@ -127,17 +127,17 @@
                   </div>
                   <div class="mb-3"> <label for="skp" class="form-label">SKP tahun kedua</label>
                     <div class="input-group mb-3">
-                      <input type="file" class="form-control" id="inputSKP2">
+                      <input type="file" class="form-control" id="inputSKP2" name="inputSKP2" accept=".pdf" required>
                       <label class="input-group-text" for="inputSKP2">
                         Upload
                       </label>
                     </div>
                   </div>
                   
-                  <div class="mb-3"> <label for="surat-opd" class="form-label">Surat Persetujuan Kepala OPD</label>
+                  <div class="mb-3"> <label for="suratopd" class="form-label">Surat Persetujuan Kepala OPD</label>
                     <div class="input-group mb-3">
-                      <input type="file" class="form-control" id="surat-opd">
-                      <label class="input-group-text" for="surat-opd">
+                      <input type="file" class="form-control" id="suratopd" name="suratopd" accept=".pdf" required>
+                      <label class="input-group-text" for="suratopd">
                         Upload
                       </label>
                     </div>
@@ -150,6 +150,23 @@
                 <div class="card-footer"> <button type="submit" class="btn btn-primary">Submit</button> </div>
                 <!--end::Footer-->
               </form> <!--end::Form-->
+
+              
+                <?php if (session()->has('message')): ?>
+                    <div class="alert alert-success mt-3">
+                        <?= session('message') ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (session()->has('errors')): ?>
+                    <div class="alert alert-danger mt-3">
+                        <ul>
+                            <?php foreach (session('errors') as $error): ?>
+                                <li><?= $error ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
             </div> <!--end::Quick Example--> <!--begin::Input Group-->
           </div>
         </div>

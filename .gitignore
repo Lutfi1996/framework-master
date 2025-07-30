@@ -10,6 +10,7 @@ writable/cache/
 writable/logs/
 writable/session/
 writable/debugbar/
+writable/uploads/
 
 # OS / Editor / Tool Files
 *.log

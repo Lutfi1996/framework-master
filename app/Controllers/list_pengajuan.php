@@ -3,16 +3,19 @@
 namespace App\Controllers;
 
 use App\Models\list_pengajuan_model;
+use App\Models\mutasi_file_model;
 
 class List_pengajuan extends BaseController
 {
 
     protected $model; // Deklarasikan property
+    protected $fileModel; // Model untuk file
 
     public function __construct()
     {
         // Inisialisasi model di constructor
         $this->model = new list_pengajuan_model();
+        $this->fileModel = new mutasi_file_model();
     }
 
     public function index()
@@ -40,7 +43,7 @@ class List_pengajuan extends BaseController
     public function create(): string
     {
         $data = [
-            'title' => 'Form Pengajuan Mutasisssss',
+            'title' => 'Form Pengajuan Mutasi',
             // 'validation' => \Config\Services::validation(),
             'pegawai' => null // Inisialisasi pegawai sebagai null
         ];
@@ -64,6 +67,69 @@ class List_pengajuan extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+
+        // Validasi untuk semua file
+        $validationRules = [
+            'inputSK' => [
+                'label' => 'File SK',
+                'rules' => 'uploaded[inputSK]|max_size[inputSK,2048]|ext_in[inputSK,pdf]|mime_in[inputSK,application/pdf]',
+                'errors' => [
+                    'uploaded' => '{field} harus diupload',
+                    'max_size' => '{field} maksimal 2MB',
+                    'ext_in' => '{field} harus berupa PDF',
+                    'mime_in' => '{field} harus berupa PDF'
+                ]
+            ],
+            'inputSKKP' => [
+                'label' => 'File SKKP',
+                'rules' => 'uploaded[inputSKKP]|max_size[inputSKKP,2048]|ext_in[inputSKKP,pdf]|mime_in[inputSKKP,application/pdf]',
+                'errors' => [
+                    'uploaded' => '{field} harus diupload',
+                    'max_size' => '{field} maksimal 2MB',
+                    'ext_in' => '{field} harus berupa PDF',
+                    'mime_in' => '{field} harus berupa PDF'
+                ]
+            ],
+            'inputSKP1' => [
+                'label' => 'File SKP 1',
+                'rules' => 'uploaded[inputSKP1]|max_size[inputSKP1,2048]|ext_in[inputSKP1,pdf]|mime_in[inputSKP1,application/pdf]',
+                'errors' => [
+                    'uploaded' => '{field} harus diupload',
+                    'max_size' => '{field} maksimal 2MB',
+                    'ext_in' => '{field} harus berupa PDF',
+                    'mime_in' => '{field} harus berupa PDF'
+                ]
+            ],
+            'inputSKP2' => [
+                'label' => 'File SKP 2',
+                'rules' => 'uploaded[inputSKP2]|max_size[inputSKP2,2048]|ext_in[inputSKP2,pdf]|mime_in[inputSKP2,application/pdf]',
+                'errors' => [
+                    'uploaded' => '{field} harus diupload',
+                    'max_size' => '{field} maksimal 2MB',
+                    'ext_in' => '{field} harus berupa PDF',
+                    'mime_in' => '{field} harus berupa PDF'
+                ]
+            ],
+            'suratopd' => [
+                'label' => 'Surat OPD',
+                'rules' => 'uploaded[suratopd]|max_size[suratopd,2048]|ext_in[suratopd,pdf]|mime_in[suratopd,application/pdf]',
+                'errors' => [
+                    'uploaded' => '{field} harus diupload',
+                    'max_size' => '{field} maksimal 2MB',
+                    'ext_in' => '{field} harus berupa PDF',
+                    'mime_in' => '{field} harus berupa PDF'
+                ]
+            ]
+        ];
+
+        if (!$this->validate($validationRules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+
+        
+
+
         $dataPeg = $list_pengajuan_model->getPegawai($this->request->getPost('nip'));
         
         // Dapatkan data dari form
@@ -76,14 +142,77 @@ class List_pengajuan extends BaseController
             // 'jabatan_lama' => $this->request->getPost('jabatan_lama'),
             // 'jabatan_baru' => $this->request->getPost('jabatan_baru'),
             'alasan' => $this->request->getPost('alasan'),
-            'input_by_id' => session()->get('user_id') // Sesuaikan dengan session user Anda
+            'input_by_id' => session()->get('userId') // Sesuaikan dengan session user Anda
         ];
         
         if ($this->model->insert($data)) {
+
+            // Ambil ID terakhir
+            $lastInsertID = $this->model->getInsertID(); // Menggunakan method model
+            $kodeNip = $this->request->getPost('nip');
+            // Proses upload masing-masing file
+            $uploadedFiles = [];
+            // $fileFields = ['inputSK', 'inputSKKP', 'inputSKP1', 'inputSKP2', 'suratopd'];
+            // Mapping field ke folder tujuan
+            $folderMapping = [
+                'inputSK' => 'sk',
+                'inputSKKP' => 'skkp',
+                'inputSKP1' => 'skp1',
+                'inputSKP2' => 'skp2',
+                'suratopd' => 'opd'
+            ];
+
+            // foreach ($fileFields as $field) {
+            foreach ($folderMapping as $field => $folder) {
+                $file = $this->request->getFile($field);
+                // Cek apakah file valid dan belum dipindahkan
+                if ($file->isValid() && !$file->hasMoved()) {
+                    // Buat folder jika belum ada
+                    $uploadPath = WRITEPATH . 'uploads/' . $folder . '/';
+                    if (!is_dir($uploadPath)) {
+                        mkdir($uploadPath, 0777, true);
+                    }
+
+                    // Format nama file
+                    $newName = sprintf(
+                        "%d-%s-%s-%s-%s.%s",
+                        $lastInsertID,
+                        $kodeNip,
+                        $field,
+                        date('Ymd-His'),
+                        bin2hex(random_bytes(3)),
+                        $file->getClientExtension()
+                    );
+
+                    // Pindahkan file ke folder khusus
+                    $file->move($uploadPath, $newName);
+                    $uploadedFiles[$field] = $folder . '/' . $newName;
+
+                    $idPengajuan = $lastInsertID; // Simpan ID pengajuan untuk digunakan nanti
+                    // Simpan ke database
+                    $this->saveFileRecord([
+                        'id_pengajuan' => $idPengajuan,
+                        'type_file' => $field,
+                        'file_name' => $newName,
+                        'file_path' => 'uploads/' . $folder . '/',
+                        'status_file' => 0 // Status file 0 untuk open
+                    ]);
+                }
+            }
+
             return redirect()->to('/list_pengajuan')->with('message', 'Data berhasil disimpan');
         } else {
             return redirect()->back()->withInput()->with('errors', $this->model->errors());
         }
+    }
+
+    // Simpan data file ke database
+    protected function saveFileRecord($data)
+    {
+        // $this->model->insert($data)
+        $builder = $this->fileModel->table('z_mutasi_pengajuan_files');
+        $builder->insert($data);
+        return $this->fileModel->insertID();
     }
 
     //fitur search
