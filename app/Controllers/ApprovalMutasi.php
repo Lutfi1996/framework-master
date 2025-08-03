@@ -65,7 +65,8 @@ class ApprovalMutasi extends BaseController
     {
         $approverId = session()->get('id'); // ID admin yang melakukan approval
         
-        if ($this->model->processApproval($id, $approverId, 'approved')) {
+        if ($this->model->processApproval($id, $approverId, 1)) {
+            $this->fileModel->processApprovalFile($id, $approverId, 1);
             return redirect()->to('/approval-mutasi')->with('message', 'Pengajuan berhasil disetujui');
         } else {
             return redirect()->to('/approval-mutasi')->with('error', 'Gagal menyetujui pengajuan');
@@ -76,7 +77,8 @@ class ApprovalMutasi extends BaseController
     {
         $approverId = session()->get('id'); // ID admin yang melakukan approval
         
-        if ($this->model->processApproval($id, $approverId, 'rejected')) {
+        if ($this->model->processApproval($id, $approverId, 2)) {
+            $this->fileModel->processApprovalFile($id, $approverId, 2);
             return redirect()->to('/approval-mutasi')->with('message', 'Pengajuan berhasil ditolak');
         } else {
             return redirect()->to('/approval-mutasi')->with('error', 'Gagal menolak pengajuan');

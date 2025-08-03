@@ -254,4 +254,5 @@ class List_pengajuan extends BaseController
         return view('form_pengajuan', $data);
     }
 
+    
 }

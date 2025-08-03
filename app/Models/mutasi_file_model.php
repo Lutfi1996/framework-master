@@ -28,4 +28,17 @@ class mutasi_file_model extends Model
         return $this->where('id_pengajuan', $idPengajuan)
                    ->findAll();
     }
+
+    // Untuk menyimpan approval
+    public function processApprovalFile($id, $approverId, $status)
+    {
+        $data = [
+            'status_file' => $status
+        ];
+        
+        
+        return $this->where('id_pengajuan', $id)
+                ->set($data)
+                ->update();
+    }
 }

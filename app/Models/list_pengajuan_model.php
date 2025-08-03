@@ -24,7 +24,8 @@ class list_pengajuan_model extends Model
         'input_by_id',
         'input_date',
         'update_by_id',
-        'update_date'
+        'update_date',
+        'status_pengajuan'
     ];
     
     protected $useAutoIncrement = true;
@@ -109,5 +110,18 @@ class list_pengajuan_model extends Model
             ->get()
             ->getRow();
     }
+
+    // Untuk menyimpan approval
+    public function processApproval($id, $approverId, $status)
+    {
+        $data = [
+            'status_pengajuan' => $status,
+            'update_date' => date('Y-m-d H:i:s'),
+            'update_by_id' => $approverId
+        ];
+        
+        return $this->update($id, $data);
+    }
+
 }
 
