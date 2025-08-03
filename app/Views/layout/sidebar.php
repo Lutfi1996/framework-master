@@ -57,6 +57,12 @@
                   <p>Setting User</p>
                 </a>
               </li>
+
+              <li class="nav-item"> <a href="<?= base_url('approval-mutasi') ?>" class="nav-link"> 
+                  <i class="nav-icon bi bi-palette"></i>
+                  <p>Approval Pengajuan Mutasi</p>
+                </a>
+              </li>
             <?php endif; ?>
 
             <li class="nav-item"> <a href="./generate/theme.html" class="nav-link"> <i
