@@ -19,6 +19,11 @@ class ApprovalMutasi extends BaseController
     
     public function index()
     {
+        $perPage = 10; // Jumlah data per halaman
+        $currentPage = $this->request->getVar('page') ? $this->request->getVar('page') : 1;
+
+        $dataMutasi = $this->model->getJoinOutstanding($perPage);
+
         // Pastikan hanya admin BKPSDM yang bisa akses
         if (session()->get('type_user') != 1 && session()->get('type_user') != 2) {
             return redirect()->to('/');
@@ -26,7 +31,10 @@ class ApprovalMutasi extends BaseController
         //$data['mutasi'] = $model->getJoin(); // ambil semua data dgn join
         $data = [
             'title' => 'Approval Pengajuan Mutasi',
-            'mutasi' => $this->model->getJoinOutstanding() // ambil semua data dgn join
+            'mutasi' => $dataMutasi, // ambil semua data dgn join
+            'pager' => $this->model->pager,
+            'currentPage' => $currentPage,
+            // 'keyword' => $keyword
         ];
         
         return view('approval_mutasi/index', $data);

@@ -40,15 +40,16 @@ class list_pengajuan_model extends Model
         return $this->select('z_mutasi_pengajuan.*, Peg_Unker.unker1')
             ->join('Peg_unker', 'Peg_unker.kodeunker = z_mutasi_pengajuan.kodeunker')
             //->findAll()
-            ->paginate($perPage);;
+            ->paginate($perPage);
     }
 
-    public function getJoinOutstanding()
+    public function getJoinOutstanding($perPage = 10)
     {
         return $this->select('z_mutasi_pengajuan.*, Peg_Unker.unker1')
             ->where('status_pengajuan', 0) // hanya yang belum disetujui
             ->join('Peg_unker', 'Peg_unker.kodeunker = z_mutasi_pengajuan.kodeunker')
-            ->findAll();
+            ->paginate($perPage);
+            //->findAll();
     }
 
     public function formatStatus_pengajuan($status)
