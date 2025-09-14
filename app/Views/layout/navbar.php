@@ -25,7 +25,7 @@
                 </p>
               </li> <!--end::User Image--> <!--begin::Menu Body-->
               <li class="user-footer"> 
-                <!-- <a href="#" class="btn btn-default btn-flat">Profile</a> -->
+                <a href="<?= base_url('/ubah-password') ?>" class="btn btn-default btn-flat">Ubah Password</a>
                 <a href="<?= base_url('/logout') ?>" onclick="return confirm('Yakin ingin logout?')"
                   class="btn btn-default btn-flat float-end">Sign out
                 </a> 

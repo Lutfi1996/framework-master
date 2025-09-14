@@ -10,6 +10,10 @@ $routes->get('/', 'Home::index', ['filter' => 'auth']);
 // $routes->get('/form_pengajuan', 'list_pengajuan::create', ['filter' => 'role:3']);
 // $routes->get('/form_pengajuan', 'list_pengajuan::create', ['filter' => 'role:3']);
 $routes->get('/list_pengajuan', 'list_pengajuan::index', ['filter' => 'auth']);
+$routes->get('ubah-password', 'Auth::change_password');
+$routes->post('ubah-password', 'Auth::update_password');
+$routes->get('debug-user', 'Auth::debug_user');
+$routes->get('debug-user/(:num)', 'Auth::debug_user/$1');
 
 $routes->group('form_pengajuan', function($routes) {
     $routes->get('/', 'list_pengajuan::create',  ['filter' => 'role:3']);
