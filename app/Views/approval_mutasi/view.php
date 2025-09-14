@@ -158,10 +158,47 @@
                   </div> -->
                   <div class="mb-3">
                     <label for="alasan" class="form-label">Alasan</label>
-                    <p class="form-control"> 
+                    <textarea name="alasan" class="form-control" rows="3" placeholder="Enter ..." readonly>
                       <?= $pengajuan['alasan'] ?>
-                    </p>        
+                    </textarea>     
                     <!-- <input type="nama" class="form-control" id="alasan" name="alasan" aria-describedby="nama"> -->
+                  </div>
+
+                  <div ><strong>Tujuan Mutasi</strong></div>
+
+                  <div class="col-md-12 mb-3"> <label for="tujuanunker1" class="form-label">Dinas</label>
+                    <select name="tujuanunker1" id="tujuanunker1" class="form-control" required>
+                        <option value="">-- Pilih Dinas --</option>
+                        <?php foreach ($unker1 as $option): ?>
+                            <option value="<?= esc($option['unker1']) ?>" 
+                                <?= ($defaultDinas == $option['unker1']) ? 'selected' : '' ?>>
+                                <?= esc($option['unker1']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                  </div>
+
+                  <div class="row g-3 mb-3">  
+                    <div class="col-md-6"> <label for="bidangunker2" class="form-label">Bidang</label>
+                      <select class="form-control" id="bidangunker2" name="bidangunker2" required>
+                          <option value="">Pilih Bidang ...</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6"> <label for="subbidangunker3" class="form-label">Sub Bidang</label>
+                      <select class="form-control" id="subbidangunker3" name="subbidangunker3" required>
+                          <option value="">Pilih Sub Bidang ...</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  
+
+                  <div class="row g-3 mb-3">  
+                    <div class="col-md-6"> <label for="tujuanjabatan" class="form-label">Jabatan</label>
+                      <input type="nama" class="form-control" name="tujuanjabatan" id="tujuanjabatan" aria-describedby="tujuanjabatan"
+                      value="<?= (old('tujuanjabatan', $pengajuan['jabakhirnama_baru'])) ?>" >
+                    </div>
+                    
                   </div>
 
                   <div class="row">
@@ -270,6 +307,105 @@ $(function () {
         }
     });
 });
+</script>
+
+<script>
+$(document).ready(function() {
+    var defaultDinas = '<?= $defaultDinas ?>';
+    var defaultBidang = '<?= $defaultBidang ?>';
+    var defaultSeksi = '<?= $defaultSubBidang ?>';
+    
+    //console.log('Default Values:', defaultDinas, defaultBidang, defaultSeksi);
+    
+    // Load bidang berdasarkan dinas default
+    if (defaultDinas) {
+        loadBidangUnker(defaultDinas, defaultBidang);
+    }
+    
+    // Event change untuk dinas
+    $('#tujuanunker1').change(function() {
+        var codeunker1 = $(this).val();
+        loadBidangUnker(codeunker1, '');
+    });
+    
+    // Event change untuk bidang
+    $('#bidangunker2').change(function() {
+        var unker2 = $(this).val();
+        var codeunker1 = $('#tujuanunker1').val();
+        loadSeksiUnker(codeunker1, unker2, '');
+    });
+});
+
+function loadBidangUnker(codeunker1, defaultValue) {
+    if(codeunker1) {
+        $.ajax({
+            url: '<?= site_url('getUnkerBidangByDinas') ?>/' + codeunker1,
+            type: 'GET',
+            dataType: 'json',
+            beforeSend: function() {
+                $('#bidangunker2').html('<option value="">Loading...</option>');
+            },
+            success: function(data) {
+                $('#bidangunker2').empty().append('<option value="">Pilih Bidang</option>');
+                
+                $.each(data, function(key, value) {
+                    var selected = (value.unker2 == defaultValue) ? 'selected' : '';
+                    $('#bidangunker2').append(
+                        '<option value="'+ value.unker2 +'" '+ selected +'>'+ 
+                        value.unker2 + '</option>'
+                    );
+                });
+                
+                // Setelah bidang ter-load, load seksi jika ada default value
+                if (defaultValue) {
+                    setTimeout(function() {
+                        loadSeksiUnker(codeunker1, defaultValue, '<?= $defaultSubBidang ?>');
+                    }, 100);
+                }
+            },
+            error: function() {
+                $('#bidangunker2').html('<option value="">Error loading data</option>');
+            }
+        });
+    } else {
+        $('#bidangunker2').empty().append('<option value="">Pilih Bidang</option>');
+        $('#subbidangunker3').empty().append('<option value="">Pilih Sub Bidang</option>');
+    }
+}
+
+function loadSeksiUnker(codeunker1, unker2, defaultValue) {
+    if(codeunker1 && unker2) {
+        $.ajax({
+            url: '<?= site_url('getUnkerSubBidangByBidang') ?>/' + 
+                  encodeURIComponent(codeunker1) + '/' + 
+                  encodeURIComponent(unker2),
+            type: 'GET',
+            dataType: 'json',
+            beforeSend: function() {
+                $('#subbidangunker3').html('<option value="">Loading...</option>');
+            },
+            success: function(data) {
+                $('#subbidangunker3').empty().append('<option value="">Pilih Sub Bidang</option>');
+                
+                $.each(data, function(key, value) {
+                    var selected = (value.unker3 == defaultValue) ? 'selected' : '';
+                    $('#subbidangunker3').append(
+                        '<option value="'+ value.unker3 +'" '+ selected +'>'+ 
+                        value.unker3 + '</option>'
+                    );
+                });
+                
+                // Trigger change jika perlu
+                $('#subbidangunker3').trigger('change');
+            },
+            error: function() {
+                $('#subbidangunker3').html('<option value="">Error loading data subbidang</option>');
+            }
+        });
+    } else {
+        $('#subbidangunker3').empty().append('<option value="">Pilih Sub Bidang</option>');
+    }
+}
 </script>
 <?= $this->endSection() ?>
 

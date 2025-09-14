@@ -58,12 +58,24 @@ class ApprovalMutasi extends BaseController
 
         //$this->fileModel->where('id_pengajuan', $id);
         $files = $this->fileModel->getFilesByPengajuan($id);
+
+        // Cara 1: Query Builder
+        $db = db_connect();
+        $unker1 = $db->table('Peg_Unker')
+                            ->select('unker1')
+                            ->distinct()
+                            ->get()
+                            ->getResultArray();
         
         $data = [
             'title' => 'Detail Pengajuan Mutasi',
             'pengajuan' => $pengajuan,
             'pegawai' =>$this->model->getPegawai($nip),
-            'filepdf'=> $files
+            'defaultDinas' => $pengajuan['unker1_baru'],
+            'defaultBidang' => $pengajuan['unker2_baru'],
+            'defaultSubBidang' => $pengajuan['unker3_baru'],
+            'filepdf'=> $files,
+            'unker1' => $unker1,
         ];
         
         return view('approval_mutasi/view', $data);
