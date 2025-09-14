@@ -35,12 +35,22 @@ class list_pengajuan_model extends Model
     protected $beforeInsert = ['setInsertData'];
     protected $beforeUpdate = ['setUpdateData'];
 
-    public function getJoin($perPage = 10)
+    public function getJoin($perPage = 10, $kodeunker='')
     {
-        return $this->select('z_mutasi_pengajuan.*, Peg_Unker.unker1')
-            ->join('Peg_unker', 'Peg_unker.kodeunker = z_mutasi_pengajuan.kodeunker')
-            //->findAll()
-            ->paginate($perPage);
+        if($kodeunker==''){
+            // jika kodeunker kosong, ambil semua
+            return $this->select('z_mutasi_pengajuan.*, Peg_Unker.unker1')
+                ->join('Peg_unker', 'Peg_unker.kodeunker = z_mutasi_pengajuan.kodeunker')
+                ->paginate($perPage);
+                //->findAll();
+        }
+        else{
+            return $this->select('z_mutasi_pengajuan.*, Peg_Unker.unker1')
+                ->join('Peg_unker', 'Peg_unker.kodeunker = z_mutasi_pengajuan.kodeunker')
+                //->findAll()
+                ->like('z_mutasi_pengajuan.kodeunker', $kodeunker, 'after')
+                ->paginate($perPage);
+        }
     }
 
     public function getJoinOutstanding($perPage = 10)

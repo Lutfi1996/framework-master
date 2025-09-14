@@ -24,7 +24,14 @@ class List_pengajuan extends BaseController
         $currentPage = $this->request->getVar('page') ? $this->request->getVar('page') : 1;
 
         $model = new list_pengajuan_model();
-        $data['mutasi'] = $model->getJoin($perPage); // ambil semua data dgn join
+
+        $kodeunker = ''; // untuk admin, ambil semua data
+        if(session()->get('type_user') == 3){ // admin opd
+            $kodeunker = session()->get('kodeunker');
+            // $data['mutasi'] = $model->getJoin($perPage, $kodeunker); // ambil data sesuai kodeunker user login
+        } 
+
+        $data['mutasi'] = $model->getJoin($perPage, $kodeunker); // ambil semua data dgn join
 
 
         $pager = $this->model->pager;
@@ -278,10 +285,36 @@ class List_pengajuan extends BaseController
         $list_pengajuan_model = new list_pengajuan_model();
         $explodedKeyword = explode(' - ', $keyword);
         $nip = trim($explodedKeyword[0]); // Ambil NIP dari input
+
+
+        // Cara 1: Query Builder
+        $db = db_connect();
+        $unker1 = $db->table('Peg_Unker')
+                            ->select('unker1')
+                            ->distinct()
+                            ->get()
+                            ->getResultArray();
+
+        // $reqUnker1 = $this->request->getPost('unker1');
+        $unker2 = $db->table('Peg_Unker')
+                            ->select('unker2')
+                            ->distinct()
+                            ->get()
+                            ->getResultArray();
+
+        $unker3 = $db->table('Peg_Unker')
+                            ->select('unker3')
+                            ->distinct()
+                            ->get()
+                            ->getResultArray();
+
         $data = [
             'title' => 'form Data Pegawai',
             // 'validation' => \Config\Services::validation(),
-            'pegawai' => $list_pengajuan_model->getPegawai($nip)
+            'pegawai' => $list_pengajuan_model->getPegawai($nip),
+            'unker1' => $unker1,
+            'unker2' => $unker2,
+            'unker3' => $unker3
         ];
 
         return view('form_pengajuan', $data);

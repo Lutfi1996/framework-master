@@ -143,8 +143,62 @@
                     </div>
                   </div>
                   <div class="mb-3"> <label for="alasan" class="form-label">Alasan</label>
-                    <input type="nama" class="form-control" id="alasan" name="alasan" aria-describedby="nama">
+                    <!-- <input type="text" class="form-control" id="alasan" name="alasan" aria-describedby="nama">
+                      -->
+                    <textarea name="alasan" class="form-control" rows="3" placeholder="Enter ..."></textarea>
                   </div>
+
+                  <div ><strong>Tujuan Mutasi</strong></div>
+
+                  <div class="col-md-12 mb-3"> <label for="unker1" class="form-label">Dinas</label>
+                    <select name="unker1" id="unker1" class="form-control" required>
+                        <option value="">-- Pilih Dinas --</option>
+                        <?php foreach ($unker1 as $option): ?>
+                            <option value="<?= esc($option['unker1']) ?>" 
+                                <?= (old('unker') == $option['unker1']) ? 'selected' : '' ?>>
+                                <?= esc($option['unker1']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                  </div>
+
+                  <div class="row g-3 mb-3">  
+                    <div class="col-md-6"> <label for="unker2" class="form-label">Bidang</label>
+                      <select name="unker2" id="unker2" class="form-control" required>
+                          <option value="">-- Pilih Bidang --</option>
+                          <?php foreach ($unker2 as $option): ?>
+                            <option value="<?= esc($option['unker2']) ?>" 
+                                <?= (old('unker2') == $option['unker2']) ? 'selected' : '' ?>>
+                                <?= esc($option['unker2']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                    <div class="col-md-6"> <label for="unker3" class="form-label">Sub Bidang</label>
+                      <select name="unker3" id="unker3" class="form-control" required>
+                          <option value="">-- Pilih Sub Bidang --</option>
+                          <?php foreach ($unker3 as $option): ?>
+                            <option value="<?= esc($option['unker3']) ?>" 
+                                <?= (old('unker3') == $option['unker3']) ? 'selected' : '' ?>>
+                                <?= esc($option['unker3']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="row g-3 mb-3">  
+                    <div class="col-md-6"> <label for="jabatan" class="form-label">Jabatan</label>
+                      <input type="nama" class="form-control" name="jabatan" id="jabatan" aria-describedby="jabatan"
+                      value="" >
+                    </div>
+                    <div class="col-md-6"> <label for="golongan" class="form-label">Golongan</label>
+                      <input type="nip" class="form-control" name="golongan"  id="golongan" aria-describedby="golongan"
+                      value="" >
+                    </div>
+                  </div>
+
+
 
                 </div> <!--end::Body--> <!--begin::Footer-->
                 <div class="card-footer"> <button type="submit" class="btn btn-primary">Submit</button> </div>
