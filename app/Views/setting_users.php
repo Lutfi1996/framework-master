@@ -14,6 +14,11 @@
                         <button type="button" class="btn btn-primary mt-3 me-3">Tambah User</button> 
                       </a>
                     </div>
+                    <?php if(session()->getFlashdata('success')): ?>
+                        <div class="alert alert-success">
+                            <?= session()->getFlashdata('success') ?>
+                        </div>
+                    <?php endif; ?>
                     <div class="card-body">
                         <table class="table table-bordered">
                             <thead>

@@ -29,17 +29,23 @@
                 <div class="card-title"> Ubah Password</div>
               </div> <!--end::Header--> <!--begin::Form-->
                 <div class="card-body">
-                    
+                    <?php if(session()->getFlashdata('success')): ?>
+                        <div class="alert alert-success">
+                            <?= session()->getFlashdata('success') ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if(session()->getFlashdata('error')): ?>
+                        <div class="alert alert-danger">
+                            <?= session()->getFlashdata('error') ?>
+                        </div>
+                    <?php endif; ?>
                         
-                        <?= esc(session()->getFlashdata('error')) ?>
 
                         <?php if(isset($validation)): ?>
                             <div class="alert alert-danger"><?= $validation->listErrors() ?></div>
                         <?php endif; ?>
                         
-                        <?php if(isset($error)): ?>
-                            <div class="alert alert-danger"><?= $error ?></div>
-                        <?php endif; ?>
                         
                         <?php if(isset($success)): ?>
                             <div class="alert alert-success"><?= $success ?></div>

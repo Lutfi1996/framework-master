@@ -93,7 +93,7 @@ class Auth extends Controller
         $rules = [
             'current_password' => 'required',
             'new_password' => 'required|min_length[8]',
-            'confirm_password' => 'required|matches[new_password]'
+            'confirm_password' => 'required'
         ];
 
         if (!$this->validate($rules)) {
@@ -103,6 +103,7 @@ class Auth extends Controller
         // Ambil data dari form
         $current_password = $this->request->getPost('current_password');
         $new_password = $this->request->getPost('new_password');
+        $confirm_password = $this->request->getPost('confirm_password');
         
         // Dapatkan data user yang sedang login
         // Ganti dengan cara Anda menyimpan user_id di session
@@ -120,41 +121,27 @@ class Auth extends Controller
         
         // Periksa apakah user ditemukan
         if (!$user) {
+            session()->setFlashdata('error', 'User tidak ditemukan '.$user['nama'].' ');
             return redirect()->to('/ubah-password')->with('error', 'User tidak ditemukan');
         }
-        
-        // Periksa apakah kolom password ada dalam hasil query
-        if (!isset($user['password']) || empty($user['password'])) {
-            // Jika password kosong, mungkin user dibuat dengan password default dari NIP
-            if (isset($user['nip'])) {
-                // Generate password default dari NIP untuk verifikasi
-                $defaultPassword = $this->list_users_model->generateDefaultPassword($user['nip']);
-                
-                // Bandingkan dengan input pengguna
-                if ($current_password === $defaultPassword) {
-                    // Jika password default sesuai, update ke password baru
-                    $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-                    $this->list_users_model->update($user_id, ['password' => $hashed_password]);
-                    
-                    return redirect()->to('/ubah-password')->with('success', 'Password berhasil diubah');
-                } else {
-                    return redirect()->to('/ubah-password')->with('error', 'Password saat ini salah');
-                }
-            } else {
-                return redirect()->to('/ubah-password')->with('error', 'Kolom password tidak ditemukan dalam database');
-            }
-        }
+
         
         // Verifikasi password saat ini
         if (!password_verify($current_password, $user['password'])) {
             return redirect()->to('/ubah-password')->with('error', 'Password saat ini salah');
         }
+
+        // Periksa kecocokan konfirmasi password
+        if( $new_password != $confirm_password ) {
+            // session()->setFlashdata('error', 'Konfirmasi password tidak sesuai');
+            return redirect()->to('/ubah-password')->with('error', 'Konfirmasi password tidak sesuai');
+        }
         
         // Update password baru
         $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
         $this->list_users_model->update($user_id, ['password' => $hashed_password]);
-        
-        return redirect()->to('/ubah-password')->with('success', 'Password berhasil diubah');
+        // session()->setFlashdata('success', 'Password berhasil diubah');
+        return redirect()->to('/ubah-password')->with('success', 'Password berhasil diubah ');
     }
 
     // Method untuk debugging - tampilkan data user
@@ -168,7 +155,9 @@ class Auth extends Controller
         echo "<pre>";
         print_r($user);
         echo "</pre>";
-        
+        echo "<pre>";
+        print_r(session()->get('kodeunker')); 
+         echo "</pre>";
         // Cek juga session
         echo "<h3>Session Data:</h3>";
         echo "<pre>";

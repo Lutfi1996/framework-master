@@ -196,8 +196,8 @@ class List_users extends BaseController
         // Update password
         $newPassword = password_hash($this->request->getPost('new_password'), PASSWORD_DEFAULT);
         $this->list_users_model->update($id, ['password' => $newPassword]);
-        
-        return redirect()->to('/setting_users')->with('success', 'Password berhasil diperbarui');
+        // session()->setFlashdata('success', 'Data user '.$user['nama'].' berhasil diperbarui ');
+        return redirect()->to('/setting_users')->with('success', 'Data user '.$user['nama'].' berhasil diperbarui');
     }
 
 
