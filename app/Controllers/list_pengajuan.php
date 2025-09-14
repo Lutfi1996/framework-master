@@ -33,10 +33,7 @@ class List_pengajuan extends BaseController
 
         $data['mutasi'] = $model->getJoin($perPage, $kodeunker); // ambil semua data dgn join
 
-
         $pager = $this->model->pager;
-        
-        
         
         // tambahkan format status ke setiap record
         foreach ($data['mutasi'] as &$row) {
@@ -79,6 +76,34 @@ class List_pengajuan extends BaseController
 
     //    return $this->response->setJSON($suggestions);
     //   }
+
+    public function getBidangByDinas($dinasId)
+    {
+        // $produkModel = $this->model;
+        // $data = $produkModel->where('kategori_id', $kategoriId)->findAll();
+
+        $db = db_connect();
+        $unker2 = $db->table('Peg_Unker')
+                            ->select('unker2')
+                            ->distinct()
+                            ->where('unker1', $dinasId)
+                            ->get()
+                            ->getResultArray();
+        return $this->response->setJSON($unker2);
+    }
+
+    public function getSubBidangByBidang($dinasId, $bidangId)
+    {
+        $db = db_connect();
+        $unker3 = $db->table('Peg_Unker')
+                            ->select('unker3')
+                            ->distinct()
+                            ->where('unker1', $dinasId)
+                            ->where('unker2', $bidangId)
+                            ->get()
+                            ->getResultArray();
+        return $this->response->setJSON($unker3);
+    }
 
     public function create(): string
     {
@@ -166,12 +191,23 @@ class List_pengajuan extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-
-        
-
-
+        // Ambil data pegawai berdasarkan NIP
         $dataPeg = $list_pengajuan_model->getPegawai($this->request->getPost('nip'));
         
+        // ambil data kode unker tujuan
+        $db = db_connect();
+        $builder = $db->table('Peg_Unker');
+        $query = $builder->select('kodeunker')
+                        ->where('unker1', $this->request->getPost('tujuanunker1'))
+                        ->where('unker2', $this->request->getPost('bidangunker2'))
+                        ->where('unker3', $this->request->getPost('subbidangunker3'))
+                        ->get();
+        $result = $query->getRow();
+        $kodeUnkerBaru = '';
+        if ($result) {
+            $kodeUnkerBaru = $result->kodeunker;
+        } 
+
         // Dapatkan data dari form
         $data = [
             'nip' => $this->request->getPost('nip'),
@@ -182,6 +218,11 @@ class List_pengajuan extends BaseController
             // 'jabatan_lama' => $this->request->getPost('jabatan_lama'),
             // 'jabatan_baru' => $this->request->getPost('jabatan_baru'),
             'alasan' => $this->request->getPost('alasan'),
+            'kodeunker_baru' => $kodeUnkerBaru, // Dinas tujuan
+            'jabakhirnama_baru' => $this->request->getPost('tujuanjabatan'), // Jabatan tujuan
+            'unker1_baru' => $this->request->getPost('tujuanunker1'), // Dinas tujuan
+            'unker2_baru' => $this->request->getPost('bidangunker2'), // Bidang tujuan
+            'unker3_baru' => $this->request->getPost('subbidangunker3'), // Sub Bidang tujuan
             'input_by_id' => session()->get('userId') // Sesuaikan dengan session user Anda
         ];
         

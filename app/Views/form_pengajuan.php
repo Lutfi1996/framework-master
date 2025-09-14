@@ -150,8 +150,8 @@
 
                   <div ><strong>Tujuan Mutasi</strong></div>
 
-                  <div class="col-md-12 mb-3"> <label for="unker1" class="form-label">Dinas</label>
-                    <select name="unker1" id="unker1" class="form-control" required>
+                  <div class="col-md-12 mb-3"> <label for="tujuanunker1" class="form-label">Dinas</label>
+                    <select name="tujuanunker1" id="tujuanunker1" class="form-control" >
                         <option value="">-- Pilih Dinas --</option>
                         <?php foreach ($unker1 as $option): ?>
                             <option value="<?= esc($option['unker1']) ?>" 
@@ -163,39 +163,26 @@
                   </div>
 
                   <div class="row g-3 mb-3">  
-                    <div class="col-md-6"> <label for="unker2" class="form-label">Bidang</label>
-                      <select name="unker2" id="unker2" class="form-control" required>
-                          <option value="">-- Pilih Bidang --</option>
-                          <?php foreach ($unker2 as $option): ?>
-                            <option value="<?= esc($option['unker2']) ?>" 
-                                <?= (old('unker2') == $option['unker2']) ? 'selected' : '' ?>>
-                                <?= esc($option['unker2']) ?>
-                            </option>
-                        <?php endforeach; ?>
+                    <div class="col-md-6"> <label for="bidangunker2" class="form-label">Bidang</label>
+                      <select class="form-control" id="bidangunker2" name="bidangunker2" >
+                          <option value="">Pilih Bidang ...</option>
                       </select>
                     </div>
-                    <div class="col-md-6"> <label for="unker3" class="form-label">Sub Bidang</label>
-                      <select name="unker3" id="unker3" class="form-control" required>
-                          <option value="">-- Pilih Sub Bidang --</option>
-                          <?php foreach ($unker3 as $option): ?>
-                            <option value="<?= esc($option['unker3']) ?>" 
-                                <?= (old('unker3') == $option['unker3']) ? 'selected' : '' ?>>
-                                <?= esc($option['unker3']) ?>
-                            </option>
-                        <?php endforeach; ?>
+                    <div class="col-md-6"> <label for="subbidangunker3" class="form-label">Sub Bidang</label>
+                      <select class="form-control" id="subbidangunker3" name="subbidangunker3" >
+                          <option value="">Pilih Sub Bidang ...</option>
                       </select>
                     </div>
                   </div>
 
+                  
+
                   <div class="row g-3 mb-3">  
-                    <div class="col-md-6"> <label for="jabatan" class="form-label">Jabatan</label>
-                      <input type="nama" class="form-control" name="jabatan" id="jabatan" aria-describedby="jabatan"
+                    <div class="col-md-6"> <label for="tujuanjabatan" class="form-label">Jabatan</label>
+                      <input type="nama" class="form-control" name="tujuanjabatan" id="tujuanjabatan" aria-describedby="tujuanjabatan"
                       value="" >
                     </div>
-                    <div class="col-md-6"> <label for="golongan" class="form-label">Golongan</label>
-                      <input type="nip" class="form-control" name="golongan"  id="golongan" aria-describedby="golongan"
-                      value="" >
-                    </div>
+                    
                   </div>
 
 
@@ -245,6 +232,61 @@ $(function () {
         select: function (event, ui) {
             $("#search_pegawai").val(ui.item.label);
             return false;
+        }
+    });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    $('#tujuanunker1').change(function() {
+        var codeunker1 = $(this).val();
+        
+        if(codeunker1) {
+            $.ajax({
+                url: '<?= site_url('getUnkerBidangByDinas') ?>/' + codeunker1,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#bidangunker2').empty().append('<option value="">Pilih Bidang Unker2</option>');
+                    
+                    $.each(data, function(key, value) {
+                        $('#bidangunker2').append('<option value="'+ value.unker2 +'">'+ value.unker2 +'</option>');
+                    });
+                }
+            });
+        } else {
+            $('#bidangunker2').empty().append('<option value="">Pilih Bidang Unker2</option>');
+        }
+    });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    $('#tujuanunker1, #bidangunker2').change(function() {
+        var codeunker1 = $('#tujuanunker1').val();
+        var codeunker2 = $('#bidangunker2').val();
+        
+        console.log("Selected codeunker1: " + codeunker1);
+        console.log("Selected codeunker2: " + codeunker2);
+        if(codeunker1 && codeunker2) {
+            $.ajax({
+                url: '<?= site_url('getUnkerSubBidangByBidang') ?>/' + 
+                      encodeURIComponent(codeunker1) + '/' + 
+                      encodeURIComponent(codeunker2),
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#subbidangunker3').empty().append('<option value="">Pilih SubBidang Unker</option>');
+                    
+                    $.each(data, function(key, value) {
+                        $('#subbidangunker3').append('<option value="'+ value.unker3 +'">'+ value.unker3 +'</option>');
+                    });
+                }
+            });
+        } else {
+            $('#subbidangunker3').empty().append('<option value="">Pilih Bidang Unker2</option>');
         }
     });
 });

@@ -12,6 +12,9 @@ $routes->get('/', 'Home::index', ['filter' => 'auth']);
 $routes->get('/list_pengajuan', 'list_pengajuan::index', ['filter' => 'auth']);
 $routes->get('/list_pengajuan/view/(:num)', 'list_pengajuan::view/$1', ['filter' => 'auth']);
 
+$routes->get('getUnkerBidangByDinas/(:segment)', 'list_pengajuan::getBidangByDinas/$1');
+$routes->get('getUnkerSubBidangByBidang/(:segment)/(:segment)', 'list_pengajuan::getSubBidangByBidang/$1/$2');
+
 $routes->get('ubah-password', 'Auth::change_password');
 $routes->post('ubah-password', 'Auth::update_password');
 // $routes->get('debug-user', 'Auth::debug_user');
