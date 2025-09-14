@@ -20,15 +20,42 @@ class List_pengajuan extends BaseController
 
     public function index()
     {
-        $model = new list_pengajuan_model();
-        $data['mutasi'] = $model->getJoin(); // ambil semua data dgn join
+        $perPage = 10; // Jumlah data per halaman
+        $currentPage = $this->request->getVar('page') ? $this->request->getVar('page') : 1;
 
+        $model = new list_pengajuan_model();
+        $data['mutasi'] = $model->getJoin($perPage); // ambil semua data dgn join
+
+
+        $pager = $this->model->pager;
+        
+        
+        
         // tambahkan format status ke setiap record
         foreach ($data['mutasi'] as &$row) {
             $row['status_label'] = $model->formatStatus_pengajuan($row['status_pengajuan']);
         }
 
-        return view('list_pengajuan', $data);
+        // // Debug: cek apa yang dikembalikan
+        // echo 'Data count: ' . count($data['mutasi']) . '<br>';
+        // echo 'Pager type: ' . gettype($model->pager) . '<br>';
+        // echo 'Pager value: ';
+        // var_dump($model->pager);
+        // die();
+
+        //     echo '<pre>';
+        //     print_r($data['mutasi']); // Aman diakses
+        //     echo '</pre>';
+        
+        // die();
+
+        return view('list_pengajuan', [
+            'mutasi' => $data['mutasi'],
+            'pager' => $model->pager,
+            'currentPage' => $currentPage,
+            // 'keyword' => $keyword
+        ]);
+        // return view('list_pengajuan', $data);
     }
 
     // public function autocomplete()
@@ -258,6 +285,35 @@ class List_pengajuan extends BaseController
         ];
 
         return view('form_pengajuan', $data);
+    }
+
+    public function view($id)
+    {
+        $pengajuan = $this->model->find($id);
+        
+        if (!$pengajuan) {
+            return redirect()->to('/approval-mutasi')->with('error', 'Data pengajuan tidak ditemukan');
+        }
+
+        // $list_pengajuan_model = new list_pengajuan_model();
+        // $explodedKeyword = explode(' - ', $keyword);
+        $nip = $pengajuan['nip'];
+        // $data = [
+        //     'title' => 'form Data Pegawai',
+        //     // 'validation' => \Config\Services::validation(),
+        // ];
+
+        //$this->fileModel->where('id_pengajuan', $id);
+        $files = $this->fileModel->getFilesByPengajuan($id);
+        
+        $data = [
+            'title' => 'Detail Pengajuan Mutasi',
+            'pengajuan' => $pengajuan,
+            'pegawai' =>$this->model->getPegawai($nip),
+            'filepdf'=> $files
+        ];
+        
+        return view('view_pengajuan', $data);
     }
 
     

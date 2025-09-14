@@ -35,11 +35,12 @@ class list_pengajuan_model extends Model
     protected $beforeInsert = ['setInsertData'];
     protected $beforeUpdate = ['setUpdateData'];
 
-    public function getJoin()
+    public function getJoin($perPage = 10)
     {
         return $this->select('z_mutasi_pengajuan.*, Peg_Unker.unker1')
             ->join('Peg_unker', 'Peg_unker.kodeunker = z_mutasi_pengajuan.kodeunker')
-            ->findAll();
+            //->findAll()
+            ->paginate($perPage);;
     }
 
     public function getJoinOutstanding()
