@@ -42,6 +42,27 @@ class list_pengajuan_model extends Model
             ->findAll();
     }
 
+    public function getJoinOutstanding()
+    {
+        return $this->select('z_mutasi_pengajuan.*, Peg_Unker.unker1')
+            ->where('status_pengajuan', 0) // hanya yang belum disetujui
+            ->join('Peg_unker', 'Peg_unker.kodeunker = z_mutasi_pengajuan.kodeunker')
+            ->findAll();
+    }
+
+    public function formatStatus_pengajuan($status)
+    {
+        $statusList = [
+            0 => '<span class="badge bg-warning">Belum Diproses</span>',
+            1 => '<span class="badge bg-success">Disetujui</span>',
+            2 => '<span class="badge bg-danger">Perbaikan</span>',
+            3 => '<span class="badge bg-secondary">Belum Diproses setelah Perbaikan</span>',
+            4 => '<span class="badge bg-info">Ditolak</span>'
+        ];
+
+        return $statusList[$status] ?? '<span class="badge bg-secondary">Tidak Diketahui</span>';
+    }
+
     protected function setInsertData(array $data)
     {
         // if (isset($data['data'])) {

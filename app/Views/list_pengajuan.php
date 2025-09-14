@@ -3,31 +3,36 @@
 <?= $this->section('content') ?>
 <section class="content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card mb-4">
+        <div class="col-md-12"> <!--begin::Quick Example-->
+            <main class="app-main"> <!--begin::App Content Header-->
+                <div class="card card-primary card-outline mb-4" style="margin-top: 20px;">
                     <div class="card-header">
-                        <h3 class="card-title">List Pengajuan </h3>
+                        <h3 class="card-title">List Pengajuan Mutasi</h3>
                     </div> <!-- /.card-header -->
                     <div class="card-body">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
+                                    <th>No</th>
                                     <th>NIP</th>
                                     <th>Nama Legkap</th>
-                                    <th>Organisasi</th>
+                                    <th>Dinas</th>
+                                    <th>Tanggal Pengajuan</th>
                                     <!-- <th>Jabatan/Golongan Lama</th>
                                     <th>Jabatan/Golongan Baru</th> -->
-                                    <th>Label</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <?php $no = 1; ?>
                                 <?php foreach($mutasi as $row): ?>
                                 <tr class="align-middle">
+                                    <td> <?= $no++ ?> </td>
                                     <td> <?= esc($row['nip']) ?> </td>
                                     <td> <?= esc($row['namalengkap']) ?> </td>
                                     <td> <?= esc($row['unker1']) ?> </td>
-                                    <td><span class="badge text-bg-danger">55%</span></td>
+                                    <td> <?= date('d/m/Y H:i', strtotime($row['input_date'])) ?></td>
+                                    <td> <?= $row['status_label'] ?> </td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -43,7 +48,7 @@
                         </ul>
                     </div>
                 </div> <!-- /.card -->
-            </div> <!-- /.col -->
+            </main> <!--end::App Content Header-->
         </div> <!--end::Row-->
     </div> <!--end::Container-->
 </section>

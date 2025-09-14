@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="card mb-4">
+                <div class="card mb-4" style="margin-top: 20px;">
                     <div class="card-header">
                         <h3 class="card-title"><?= $title ?></h3>
 
@@ -44,7 +44,7 @@
                                     <td><?= date('d/m/Y H:i', strtotime($row['input_date'])) ?></td>
                                     <td>
                                         <a href="<?= base_url('approval-mutasi/view/' . $row['id']) ?>" class="btn btn-primary btn-sm">
-                                            <i class="fas fa-eye"></i> Detail
+                                            <i class="fas fa-eye"></i>
                                         </a>
                                     </td>
                                 </tr>

@@ -39,6 +39,21 @@ class List_users extends BaseController
     // {
     //     return view('create_user'); // Assuming you have a view for creating users
     // }
+    public function view($id)
+    {
+        $user = $this->list_users_model->getUserById($id);
+        
+        if (!$user) {
+            return redirect()->to('/setting_users')->with('error', 'User tidak ditemukan');
+        }
+        
+        $data = [
+            'user' => $user,
+            'validation' => \Config\Services::validation()
+        ];
+        
+        return view('view_user', $data);
+    }
 
     public function create()
     {
@@ -124,5 +139,85 @@ class List_users extends BaseController
         // } else {
         //     return redirect()->back()->withInput()->with('error', 'Gagal menambahkan user');
         // }
+    }
+
+
+    public function edit($id)
+    {
+        $user = $this->list_users_model->find($id);
+        
+        if (!$user) {
+            return redirect()->to('/setting_users')->with('error', 'User tidak ditemukan');
+        }
+        
+        $data = [
+            'user' => $user,
+            'validation' => \Config\Services::validation()
+        ];
+        
+        return view('edit_user', $data);
+    }
+    public function update($id)
+    {
+        $user = $this->list_users_model->find($id);
+        
+        if (!$user) {
+            return redirect()->to('/setting_users')->with('error', 'User tidak ditemukan');
+        }
+        
+        // Validasi input
+        $rules = [
+            
+            'new_password' => [
+                'rules' => 'required|min_length[8]',
+                'errors' => [
+                    'required' => 'Password baru harus diisi',
+                    'min_length' => 'Password minimal 8 karakter',
+                    // 'strong_password' => 'Password harus mengandung huruf besar, angka, dan karakter khusus'
+                ]
+            ]
+        ];
+        
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('validation', $this->validator);
+        }
+        
+        // // Verifikasi password saat ini
+        // $currentPassword = $this->request->getPost('current_password');
+        // if (!password_verify($currentPassword, $user['password'])) {
+        //     return redirect()->back()->withInput()->with('error', 'Password saat ini salah');
+        // }
+         // Validasi kekuatan password manual
+        $newPassword = $this->request->getPost('new_password');
+        if (!$this->isStrongPassword($newPassword)) {
+            return redirect()->back()->withInput()->with('error', 'Password harus mengandung huruf besar, angka, dan karakter khusus');
+        }
+        
+        // Update password
+        $newPassword = password_hash($this->request->getPost('new_password'), PASSWORD_DEFAULT);
+        $this->list_users_model->update($id, ['password' => $newPassword]);
+        
+        return redirect()->to('/setting_users')->with('success', 'Password berhasil diperbarui');
+    }
+
+
+    /**
+     * Validasi kekuatan password
+     */
+    private function isStrongPassword(string $password): bool
+    {
+        $hasUpperCase = preg_match('/[A-Z]/', $password);
+        $hasNumber = preg_match('/[0-9]/', $password);
+        $hasSpecialChar = preg_match('/[^A-Za-z0-9]/', $password);
+        
+        return $hasUpperCase && $hasNumber && $hasSpecialChar;
+    }
+
+
+    public function paging ()
+    {
+        
+        
+        return view('paging_users');
     }
 }

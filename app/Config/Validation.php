@@ -38,6 +38,14 @@ class Validation extends BaseConfig
         'single' => 'CodeIgniter\Validation\Views\single',
     ];
 
+    public function strong_password(string $str): bool
+    {
+        $hasUpperCase = preg_match('/[A-Z]/', $str);
+        $hasNumber = preg_match('/[0-9]/', $str);
+        $hasSpecialChar = preg_match('/[^A-Za-z0-9]/', $str);
+        
+        return $hasUpperCase && $hasNumber && $hasSpecialChar;
+    }
     // --------------------------------------------------------------------
     // Rules
     // --------------------------------------------------------------------

@@ -26,7 +26,7 @@ class ApprovalMutasi extends BaseController
         //$data['mutasi'] = $model->getJoin(); // ambil semua data dgn join
         $data = [
             'title' => 'Approval Pengajuan Mutasi',
-            'mutasi' => $this->model->getJoin() // ambil semua data dgn join
+            'mutasi' => $this->model->getJoinOutstanding() // ambil semua data dgn join
         ];
         
         return view('approval_mutasi/index', $data);
@@ -61,7 +61,7 @@ class ApprovalMutasi extends BaseController
         return view('approval_mutasi/view', $data);
     }
     
-    public function approve($id)
+    public function approve($id)    
     {
         $approverId = session()->get('id'); // ID admin yang melakukan approval
         

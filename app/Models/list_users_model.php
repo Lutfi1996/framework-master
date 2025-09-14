@@ -89,4 +89,18 @@ class list_users_model extends Model
             ->orderBy('namaunkerutamabesar','ASC')
             ->get()->getResultArray();
     }
+
+    // Get user by ID
+    public function getUserById($id)
+    {
+        $builder = $this->db->table('z_mutasi_user u');
+        $builder->select('u.*, tu.type_user as type_user_name, unker.namaunkerutamabesar as namaunkerutamabesar');
+        $builder->join('z_mutasi_type_user tu', 'u.type_user = tu.id', 'left');
+        $builder->join('Peg_UnkerUtama unker', 'u.kodeunker_utama = unker.kodeunkerutama', 'left');
+        $builder->where('u.id', $id);
+        
+        $query = $builder->get();
+        return $query->getRow();
+    }
+
 }

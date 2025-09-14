@@ -22,6 +22,12 @@ class List_pengajuan extends BaseController
     {
         $model = new list_pengajuan_model();
         $data['mutasi'] = $model->getJoin(); // ambil semua data dgn join
+
+        // tambahkan format status ke setiap record
+        foreach ($data['mutasi'] as &$row) {
+            $row['status_label'] = $model->formatStatus_pengajuan($row['status_pengajuan']);
+        }
+
         return view('list_pengajuan', $data);
     }
 

@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="card mb-4">
+                <div class="card mb-4" style="margin-top: 20px;">
                     <div class="card-header">
                         <h3 class="card-title">List User </h3>
                     </div> <!-- /.card-header -->
@@ -35,10 +35,10 @@
                                     <td> <?= esc($row['email']) ?> </td>
                                     <td> <?= esc($row['namaunkerutamabesar']) ?> </td>
                                     <td>
-                                        <a class="btn btn-sm btn-info" title="Lihat">
+                                        <a href="<?= site_url('user/view/' . $row['id']) ?>" class="btn btn-sm btn-info" title="Lihat">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a  class="btn btn-sm btn-warning" title="Edit">
+                                        <a href="<?= site_url('user/edit/' . $row['id']) ?>" class="btn btn-sm btn-warning" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     </td>
