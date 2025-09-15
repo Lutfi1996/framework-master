@@ -42,8 +42,9 @@ $routes->group('user', function($routes) {
 $routes->group('approval-mutasi', ['filter' => 'role:1,2'], function($routes) {
     $routes->get('/', 'ApprovalMutasi::index');
     $routes->get('view/(:num)', 'ApprovalMutasi::view/$1');
-    $routes->get('approve/(:num)', 'ApprovalMutasi::approve/$1');
-    $routes->get('reject/(:num)', 'ApprovalMutasi::reject/$1');
+    // $routes->get('approve/(:num)', 'ApprovalMutasi::approve/$1');
+    // $routes->get('reject/(:num)', 'ApprovalMutasi::reject/$1');
+    $routes->post('approval/(:num)', 'ApprovalMutasi::actionApproval/$1');
     $routes->get('view-pdf/(:any)', 'ApprovalMutasi::viewPdf/$1');
 });
 

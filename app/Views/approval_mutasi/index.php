@@ -22,6 +22,30 @@
                         <?php endif; ?>
                     </div> <!-- /.card-header -->
                     <div class="card-body">
+                        <form method="GET" action="<?= site_url('approval-mutasi') ?>" class="filter-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="start_date">Dari Tanggal:</label>
+                                    <input type="date" id="start_date" name="start_date" 
+                                        value="<?= old('start_date', $start_date ?? date('Y-m-01')) ?>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="end_date">Sampai Tanggal:</label>
+                                    <input type="date" id="end_date" name="end_date" 
+                                        value="<?= old('end_date', $end_date ?? date('Y-m-t')) ?>">
+                                </div>
+                            </div>
+
+
+                            <button type="submit" class="btn-submit">
+                                <i class="fas fa-filter"></i> Terapkan Filter
+                            </button>
+                            <button type="button" onclick="resetFilter()" class="btn-reset">
+                                <i class="fas fa-times"></i> Reset Filter
+                            </button>
+                        </form>
+
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -83,6 +107,28 @@
     $(function(){
         $('#tabelMutasi').DataTable();
     });
+
+    function resetFilter() {
+        // Reset ke default bulan ini
+        const today = new Date();
+        const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+        const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        
+        document.getElementById('start_date').value = formatDate(firstDay);
+        document.getElementById('end_date').value = formatDate(lastDay);
+        document.getElementById('status').value = '';
+        document.getElementById('category').value = '';
+        
+        // Submit form
+        document.querySelector('.filter-form').submit();
+    }
+
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
 </script>
 
 <?= $this->endSection(); ?>

@@ -40,41 +40,76 @@ class list_pengajuan_model extends Model
     protected $beforeInsert = ['setInsertData'];
     protected $beforeUpdate = ['setUpdateData'];
 
-    public function getJoin($perPage = 10, $kodeunker='')
+    public function getJoin($perPage = 20, $kodeunker='', $start_date='', $end_date='', $status='%')
     {
         if($kodeunker==''){
             // jika kodeunker kosong, ambil semua
-            return $this->select('z_mutasi_pengajuan.*, Peg_Unker.unker1')
+            return $this->select('
+                z_mutasi_pengajuan.*, 
+                Peg_Unker.unker1 as unker1_lama, 
+                Peg_Unker.unker2 as unker2_lama, 
+                Peg_Unker.unker3 as unker3_lama,
+                Peg_unker_baru.unker1 as unker1_baru, 
+                Peg_unker_baru.unker2 as unker2_baru, 
+                Peg_unker_baru.unker3 as unker3_baru, 
+                Peg_Pegawai.tgllahir, 
+                Peg_Golongan.pangkatgol, 
+                Peg_Tempatlahir.tempatlahir')
                 ->join('Peg_unker', 'Peg_unker.kodeunker = z_mutasi_pengajuan.kodeunker')
+                ->join('Peg_unker Peg_unker_baru', 'Peg_unker_baru.kodeunker = z_mutasi_pengajuan.kodeunker_baru', 'left')
+                ->join('Peg_Pegawai', 'Peg_Pegawai.nip = z_mutasi_pengajuan.nip')
+                ->join('peg_golongan', 'peg_golongan.kodegol = z_mutasi_pengajuan.golakhirkodegol')
+                ->join('Peg_Tempatlahir', 'Peg_Tempatlahir.kodetempatlahir = Peg_Pegawai.kodetempatlahir')
+                ->where('input_date >=', $start_date.' 00:00:00')
+                ->where('input_date <=', $end_date.' 23:59:59')
+                ->like('status_pengajuan', $status, 'after')
                 ->paginate($perPage);
-                //->findAll();
         }
         else{
-            return $this->select('z_mutasi_pengajuan.*, Peg_Unker.unker1')
+            return $this->select('
+                z_mutasi_pengajuan.*, 
+                Peg_Unker.unker1 as unker1_lama, 
+                Peg_Unker.unker2 as unker2_lama, 
+                Peg_Unker.unker3 as unker3_lama, 
+                Peg_unker_baru.unker1 as unker1_baru, 
+                Peg_unker_baru.unker2 as unker2_baru, 
+                Peg_unker_baru.unker3 as unker3_baru,
+                Peg_Pegawai.tgllahir, 
+                Peg_Golongan.pangkatgol, 
+                Peg_Tempatlahir.tempatlahir')
                 ->join('Peg_unker', 'Peg_unker.kodeunker = z_mutasi_pengajuan.kodeunker')
-                //->findAll()
+                ->join('Peg_unker Peg_unker_baru', 'Peg_unker_baru.kodeunker = z_mutasi_pengajuan.kodeunker_baru', 'left')
+                ->join('Peg_Pegawai', 'Peg_Pegawai.nip = z_mutasi_pengajuan.nip')
+                ->join('peg_golongan', 'peg_golongan.kodegol = z_mutasi_pengajuan.golakhirkodegol')
+                ->join('Peg_Tempatlahir', 'Peg_Tempatlahir.kodetempatlahir = Peg_Pegawai.kodetempatlahir')
                 ->like('z_mutasi_pengajuan.kodeunker', $kodeunker, 'after')
+                ->where('input_date >=', $start_date.' 00:00:00')
+                ->where('input_date <=', $end_date.' 23:59:59')
+                ->like('status_pengajuan', $status, 'after')
                 ->paginate($perPage);
         }
     }
 
-    public function getJoinOutstanding($perPage = 10)
+    public function getJoinOutstanding($perPage = 20, $start_date='', $end_date='')
     {
         return $this->select('z_mutasi_pengajuan.*, Peg_Unker.unker1')
             ->where('status_pengajuan', 0) // hanya yang belum disetujui
             ->join('Peg_unker', 'Peg_unker.kodeunker = z_mutasi_pengajuan.kodeunker')
+            ->where('input_date >=', $start_date.' 00:00:00')
+            ->where('input_date <=', $end_date.' 23:59:59')
             ->paginate($perPage);
             //->findAll();
     }
+
 
     public function formatStatus_pengajuan($status)
     {
         $statusList = [
             0 => '<span class="badge bg-warning">Belum Diproses</span>',
             1 => '<span class="badge bg-success">Disetujui</span>',
-            2 => '<span class="badge bg-danger">Perbaikan</span>',
+            2 => '<span class="badge bg-info">Perbaikan</span>',
             3 => '<span class="badge bg-secondary">Belum Diproses setelah Perbaikan</span>',
-            4 => '<span class="badge bg-info">Ditolak</span>'
+            4 => '<span class="badge bg-danger">Ditolak</span>'
         ];
 
         return $statusList[$status] ?? '<span class="badge bg-secondary">Tidak Diketahui</span>';
@@ -150,10 +185,16 @@ class list_pengajuan_model extends Model
     }
 
     // Untuk menyimpan approval
-    public function processApproval($id, $approverId, $status)
+    public function processApproval($id, $approverId, $status, 
+        $unker1_baru, $unker2_baru, $unker3_baru, $kodeunker_baru, $jabakhirnama_baru)
     {
         $data = [
             'status_pengajuan' => $status,
+            'unker1_baru' => $unker1_baru,
+            'unker2_baru' => $unker2_baru,
+            'unker3_baru' => $unker3_baru,
+            'kodeunker_baru' => $kodeunker_baru,
+            'jabakhirnama_baru' => $jabakhirnama_baru,
             'update_date' => date('Y-m-d H:i:s'),
             'update_by_id' => $approverId
         ];

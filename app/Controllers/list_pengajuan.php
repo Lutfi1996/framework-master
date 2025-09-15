@@ -20,7 +20,7 @@ class List_pengajuan extends BaseController
 
     public function index()
     {
-        $perPage = 10; // Jumlah data per halaman
+        $perPage = 20; // Jumlah data per halaman
         $currentPage = $this->request->getVar('page') ? $this->request->getVar('page') : 1;
 
         $model = new list_pengajuan_model();
@@ -31,7 +31,11 @@ class List_pengajuan extends BaseController
             // $data['mutasi'] = $model->getJoin($perPage, $kodeunker); // ambil data sesuai kodeunker user login
         } 
 
-        $data['mutasi'] = $model->getJoin($perPage, $kodeunker); // ambil semua data dgn join
+        $start_date = $this->request->getGet('start_date') ?? date('Y-m-01');
+        $end_date = $this->request->getGet('end_date') ?? date('Y-m-t');
+        $status = $this->request->getGet('status') ?? '';
+
+        $data['mutasi'] = $model->getJoin($perPage, $kodeunker, $start_date, $end_date, $status); // ambil semua data dgn join
 
         $pager = $this->model->pager;
         
@@ -57,6 +61,9 @@ class List_pengajuan extends BaseController
             'mutasi' => $data['mutasi'],
             'pager' => $model->pager,
             'currentPage' => $currentPage,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'status' => $status,
             // 'keyword' => $keyword
         ]);
         // return view('list_pengajuan', $data);

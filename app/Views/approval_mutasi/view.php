@@ -38,7 +38,7 @@
                       </ul>
                   </div>
               <?php endif ?>
-              <form action="<?= base_url('/form_pengajuan/store') ?>" method="post" >
+              <form action="<?= base_url('/approval-mutasi/approval/'. $pengajuan['id']) ?>" method="post" >
                 <?= csrf_field() ?>
                 <div class="card-body">
 
@@ -158,9 +158,7 @@
                   </div> -->
                   <div class="mb-3">
                     <label for="alasan" class="form-label">Alasan</label>
-                    <textarea name="alasan" class="form-control" rows="3" placeholder="Enter ..." readonly>
-                      <?= $pengajuan['alasan'] ?>
-                    </textarea>     
+                    <textarea name="alasan" class="form-control" rows="3" placeholder="Enter ..." readonly><?= $pengajuan['alasan'] ?></textarea>     
                     <!-- <input type="nama" class="form-control" id="alasan" name="alasan" aria-describedby="nama"> -->
                   </div>
 
@@ -254,12 +252,12 @@
                   <a href="<?= base_url('approval-mutasi') ?>" class="btn btn-secondary">
                       <i class="fas fa-arrow-left"></i> Kembali
                   </a>
-                  <a href="<?= base_url('approval-mutasi/approve/' . $pengajuan['id']) ?>" class="btn btn-success">
-                      <i class="fas fa-check"></i> Setujui
-                  </a>
-                  <a href="<?= base_url('approval-mutasi/reject/' . $pengajuan['id']) ?>" class="btn btn-danger">
-                      <i class="fas fa-times"></i> Tolak
-                  </a>
+
+                  <button type="submit" class="btn btn-info" onclick="return confirmAction('approve')" name="action" value="approve">
+                      <i class="fas fa-check"></i> Setujui </button>
+                  <button type="submit" class="btn btn-danger" onclick="return confirmAction('reject')" name="action" value="reject">
+                      <i class="fas fa-times"></i> Tolak </button> 
+
                 </div>
                 <!--end::Footer-->
               </form> <!--end::Form-->
@@ -405,6 +403,23 @@ function loadSeksiUnker(codeunker1, unker2, defaultValue) {
     } else {
         $('#subbidangunker3').empty().append('<option value="">Pilih Sub Bidang</option>');
     }
+}
+
+function confirmAction(action) {
+    let message = '';
+    
+    if (action === 'approve') {
+        message = 'Apakah Anda yakin ingin menyetujui?';
+    } else if (action === 'reject') {
+        message = 'Apakah Anda yakin ingin menolak?';
+    }
+    
+    if (confirm(message)) {
+        document.getElementById('actionInput').value = action;
+        document.getElementById('myForm').submit();
+        return true;
+    }
+    return false;
 }
 </script>
 <?= $this->endSection() ?>
